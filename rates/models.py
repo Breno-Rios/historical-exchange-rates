@@ -1,3 +1,12 @@
+### https://docs.djangoproject.com/en/5.2/ref/models/fields/#field-types < Referência para Criação dos tipos
 from django.db import models
 
-# Create your models here.
+class Rate (models.Model):
+
+    date = models.DateField()
+    base = models.CharField(max_length=3)  
+    currency = models.CharField(max_length=3)  
+    value = models.FloatField()  
+
+    def __str__(self):
+        return f"1 {self.base} = {self.value} {self.currency} on {self.date}"
