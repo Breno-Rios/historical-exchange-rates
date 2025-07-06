@@ -9,4 +9,5 @@ class Rate (models.Model):
     value = models.FloatField()  
 
     def __str__(self):
-        return f"1 {self.base} = {self.value} {self.currency} on {self.date}"
+        return f'{self.date} | {self.base} → {self.currency} = {self.value}'
+
