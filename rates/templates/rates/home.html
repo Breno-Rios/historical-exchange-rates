@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,114 +8,8 @@
   <title>Historical Exchange Rates</title>
   <!-- Roboto -->
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-  <style>
-    * {
-      padding: 0;
-      margin: 0;
-      box-sizing: border-box;
-    }
-    html {
-      font-size: 62.5%;
-    }
-    body {
-      font-size: 1.6rem;
-      font-family: 'Roboto', sans-serif;
-      background: rgb(249,249,249);
-    }
+  <link rel="stylesheet" href="{% static 'rates/css/style.css' %}">
 
-    /* Header: agora ele é um flex container */
-    .main-header-container {
-      background: #193b4f;
-      width: 100%;
-      height: 10rem;
-      display: flex;             /* ativa flexbox */
-      justify-content: center;   /* centraliza horizontal */
-      align-items: center;       /* centraliza vertical */
-    }
-    .main-header h1 {
-      color: #fff;
-      font-size: 3rem;
-      text-transform: capitalize;
-    }
-
-    /* Container geral de largura máxima */
-    .container {
-      max-width: 144rem;
-      margin: 0 auto;
-      padding: 0 1.6rem;
-    }
-
-    /* Painel branco grande */
-    .content-panel {
-      background: #fff;
-      box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-      border-radius: 0.5rem;
-      width: 100%;
-      padding: 3rem;
-      margin: 2rem auto;
-      min-height:60rem;
-    }
-
-    /* Card menor dentro do painel */
-    .card {
-      background-color: #fff;
-      box-shadow: 0 0.2rem 0.5rem rgba(0,0,0,0.1);
-      border-radius: 0.5rem;
-      padding: 2rem;
-      width: 30%;
-      min-width: 20rem;
-      max-width: 40rem;
-      margin-top: 6rem;
-      margin-bottom: 2rem;
-      
-    }
-
-    .card form {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-    .card label,
-    .card input,
-    .card select,
-    .card button {
-      width: 100%;
-      font-size: 1.6rem;
-    }
-    .card button {
-      padding: 1rem;
-      background: #193b4f;
-      color: #fff;
-      border: none;
-      border-radius: 0.3rem;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: .05rem;
-    }
-    .card button:hover {
-      background: #162f40;
-    }
-
-    /* Responsivo */
-    @media (max-width: 600px) {
-      .main-header-container {
-        height: auto;  /* flexibiliza altura */
-        padding: 2rem 0;
-      }
-      .main-header h1 {
-        font-size: 2.4rem;
-      }
-      .content-panel {
-        padding: 2rem;
-        margin: 1rem auto;
-      }
-      .card {
-        width: 100%;
-        max-width: none;
-        min-width: auto;
-      }
-    }
-  </style>
 </head>
 
 <body>
@@ -122,29 +18,13 @@
       <h1>Historical Exchange Rates</h1>
     </div>
   </header>
-
   <div class="container">
     <div class="content-panel">
       <div class="card">
-        <form action="/home/api/" method="get">
-          <label for="start-date">Data Inicial:</label>
-          <input type="date" id="start-date" name="start-date" required>
-
-          <label for="end-date">Data Final:</label>
-          <input type="date" id="end-date" name="end-date" required>
-
-          <label for="base-currency">Cotação Base:</label>
-          <input type="text" id="base-currency" name="base-currency" value="USD" readonly>
-
-          <label for="target-currency">Moeda Destino:</label>
-          <select id="target-currency" name="target-currency">
-            <option value="EUR">Euro (EUR)</option>
-            <option value="BRL">Real Brasileiro (BRL)</option>
-            <option value="GBP">Libra Esterlina (GBP)</option>
-          </select>
-
-          <button type="submit">Consultar</button>
-        </form>
+          {% include "rates/forms.html" %}
+      </div>
+      <div class="results-list">
+        {% include "rates/list.html" %}
       </div>
     </div>
   </div>
