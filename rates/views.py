@@ -18,16 +18,17 @@ def call_get_rates(request):
         target_currency = request.GET.get('target-currency')
 
         if not all([start_date, end_date, base_currency, target_currency]):
-            return JsonResponse({'error': 'Parâmetros obrigatórios faltando'}, status=400)
-
+            return JsonResponse({'error': 'Required parameters missing'}, status=400)
+        if not target_currency in ['JPY', 'BRL','EUR']:
+             return JsonResponse({'error': 'Incorrect Parameters'}, status=400)
         list_dates = generate_date_range(start_date, end_date)
 
         if not isinstance(list_dates, list):
-            return JsonResponse({'error': str(list_dates)}, status=500)
+            return JsonResponse({'error': str(list_dates)}, status=400)
         
         # chama o service para criarist_datesist_datesist_datesist_datesist_dates
-        msg = fetch_and_save_rates(list_dates, base_currency, target_currency)
-        return JsonResponse({"message": msg})
+        data = fetch_and_save_rates(list_dates, base_currency, target_currency)
+        return render(request, 'rates/home.html', {'dados': data})
 
 
     except Exception as e:
