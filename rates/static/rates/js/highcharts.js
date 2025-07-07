@@ -73,11 +73,16 @@ if (Array.isArray(values)) {
   const base_str  = base[0];
   const currency_str  = currency[0];
 
-  const titleStr = `${base_str} -> ${currency_str}: ${firstDate} to ${lastDate}`;
+  let title_str;
+  if (base_str == null) {
+    title_str = '';
+    } else {
+    title_str = `${base_str} -> ${currency_str}: ${firstDate} to ${lastDate}`;
+    }
 
 Highcharts.chart('container-highcharts', {
     title: {
-        text: titleStr
+        text: title_str
     },
 
     accessibility: {
