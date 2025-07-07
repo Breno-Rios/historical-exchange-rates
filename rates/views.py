@@ -1,4 +1,4 @@
-import logging
+import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from rates.service import fetch_and_save_rates
@@ -19,16 +19,29 @@ def call_get_rates(request):
 
         if not all([start_date, end_date, base_currency, target_currency]):
             return JsonResponse({'error': 'Required parameters missing'}, status=400)
-        if not target_currency in ['JPY', 'BRL','EUR']:
+        if not target_currency in ['JPY', 'BRL','EUR'] and base_currency =='USD':
              return JsonResponse({'error': 'Incorrect Parameters'}, status=400)
         list_dates = generate_date_range(start_date, end_date)
 
         if not isinstance(list_dates, list):
             return JsonResponse({'error': str(list_dates)}, status=400)
         
-        # chama o service para criarist_datesist_datesist_datesist_datesist_dates
-        data = fetch_and_save_rates(list_dates, base_currency, target_currency)
-        return render(request, 'rates/home.html', {'dados': data})
+        # chama o service
+        data = fetch_and_save_rates(list_dates, base_currency, target_currency)  
+        
+        base = [ item['base']  for item in data ]
+        dates = [ item['date']  for item in data ]
+        currency= [ item['currency'] for item in data ]
+        values= [ item['value'] for item in data ]
+
+        context = {
+            'base': base,
+            'currency': currency,
+            'categories':dates,
+            'values': values,
+        }
+
+        return render(request, 'rates/home.html', context)
 
 
     except Exception as e:
@@ -40,7 +53,6 @@ def generate_date_range(start_date, end_date):
         fmt = "%Y-%m-%d"
         start = datetime.strptime(start_date, fmt).date()
         end    = datetime.strptime(end_date,    fmt).date()
-
         if start > end:
             return "The end_date cannot be earlier than the start_date"
         
