@@ -8,7 +8,13 @@
   <title>Historical Exchange Rates</title>
   <!-- Roboto -->
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="{% static 'rates/css/style.css' %}">
+  
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
 </head>
 
@@ -24,9 +30,10 @@
           {% include "rates/forms.html" %}
       </div>
       <div class="results-list">
-        {% include "rates/list.html" %}
+        {% include "rates/graph.html" %}
       </div>
     </div>
   </div>
+  <script src="{% static 'rates/js/highcharts.js' %}"></script> 
 </body>
 </html>
