@@ -19,8 +19,8 @@ def call_get_rates(request):
 
         if not all([start_date, end_date, base_currency, target_currency]):
             return JsonResponse({'error': 'Required parameters missing'}, status=400)
-        if not target_currency in ['JPY', 'BRL','EUR'] and base_currency =='USD':
-             return JsonResponse({'error': 'Incorrect Parameters'}, status=400)
+        if target_currency not in ['JPY', 'BRL', 'EUR'] or base_currency != 'USD':
+            return JsonResponse({'error': 'Incorrect Parameters'}, status=400)
         list_dates = generate_date_range(start_date, end_date)
 
         if not isinstance(list_dates, list):
