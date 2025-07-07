@@ -111,3 +111,48 @@
       width: 100%;
     }
   } 
+  /* highcharts*/
+  * {
+    font-family:
+        'Roboto', sans-serif
+}
+
+.highcharts-figure,
+.highcharts-data-table table {
+    max-width: auto;
+    margin: 1em auto;
+}
+
+.highcharts-data-table table {
+    font-family: 'Roboto', sans-serif;
+    border-collapse: collapse;
+    border: 1px solid var(--highcharts-neutral-color-10, #e6e6e6);
+    margin: 10px auto;
+    text-align: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.highcharts-data-table caption {
+    padding: 1em 0;
+    font-size: 5em;
+    color: var(--highcharts-neutral-color-60, #193b4f);
+}
+
+.highcharts-data-table th {
+    font-weight: 600;
+    padding: 0.5em;
+}
+
+.highcharts-data-table td,
+.highcharts-data-table th,
+.highcharts-data-table caption {
+    padding: 0.5em;
+}
+
+.highcharts-data-table thead tr,
+.highcharts-data-table tbody tr:nth-child(even) {
+    background: var(--highcharts-neutral-color-3, #b44b4b);
+}
+
+
