@@ -14,5 +14,21 @@ class RateURLsTest(TestCase):
 
     def test_rates_rate_graph_urls_is_correct(self):
         url= reverse('rates:rate_graph')
-        print(url)
         self.assertEqual(url,"/home/api/")
+
+    #Endpoints to API
+    def test_rates_rate_periods_urls_is_correct(self):
+        url= reverse('rates:rate_periods')
+        self.assertEqual(url,"/api/rates/period/")
+
+    def test_rates_day_rates_urls_is_correct(self):
+        url= reverse('rates:day_rates')
+        self.assertEqual(url,"/api/rates/day/")
+
+    def test_rates_rates_for_target_urls_is_correct(self):
+        url= reverse('rates:rates_for_target')
+        self.assertEqual(url,"/api/rate/")
+
+    def test_rates_all_rates_urls_is_correct(self):
+        url= reverse('rates:all_rates')
+        self.assertEqual(url,"/api/rates/")
