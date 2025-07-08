@@ -6,6 +6,11 @@ app_name = 'rates'
 
 urlpatterns = [
     path('', views.home,name= "home"),
-    path('home/api/', views.call_get_rates, name= "rate_graph")
-    
+    path('home/api/', views.call_get_rates, name= "rate_graph"),
+
+    #New Endpoints
+    path('api/rates/period/', views.get_rates_by_range_date, name= "rates_periods"),
+    path('api/rates/day/', views.get_rates_by_day, name= "rates_for_day"),
+    path('api/rate/', views.get_rates_by_target, name= "rates_for_target"),
+    path('api/rates/', views.get_all_rates, name= "all_rates"),
 ]
