@@ -12,6 +12,9 @@ MAX_RETRIES = 2
 RETRY_DELAY = 5  
 
 def fetch_and_save_rates(list_dates, base_currency, target_currency):
+    
+    validate_currencies(base_currency, target_currency)
+
     all_rates=[]
     for date_str in list_dates:
 
@@ -58,6 +61,12 @@ def fetch_and_save_rates(list_dates, base_currency, target_currency):
     
     return all_rates
 
+def validate_currencies(base, target):
+    if base != 'USD':
+        raise ValueError("Only USD is supported as base currency")
+    if target not in ['JPY', 'BRL', 'EUR']:
+        raise ValueError(f"Unsupported target currency: {target}")
+    
 def insert_rate(obj):
 
     data = obj
