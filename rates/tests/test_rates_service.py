@@ -25,3 +25,6 @@ class RateServicesTest(TestCase):
   def test_service_function_fetch_and_save_rates_return_is_list(self):
     lista= service.fetch_and_save_rates(['2025-07-01'], 'USD', 'BRL')
     self.assertIsInstance(lista, list)
+
+  def test_service_function_validate_currencies_is_ok(self):
+    service.validate_currencies('USD',"BRL")
