@@ -9,10 +9,10 @@ def generate_date_range(start_date, end_date):
     except ValueError as e:
         raise ValueError(f"Invalid date format: {e}")
     
-    if start > end:
-        raise ValueError("The 'end_date' cannot be earlier than the 'start_date'")
     if start > date.today():
         raise ValueError("The 'start_date' cannot be after today")
+    if start > end:
+        raise ValueError("The 'end_date' cannot be earlier than the 'start_date'")
     if end - start > timedelta(days=5):
         raise ValueError("The period between 'start_date' and 'end_date' cannot exceed 5 days")
     
