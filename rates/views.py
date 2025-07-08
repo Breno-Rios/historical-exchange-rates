@@ -2,7 +2,7 @@ import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from rates.service import fetch_and_save_rates
-from datetime import datetime,timedelta,date
+from rates.utils import generate_date_range
 
 
 # Create your views here.
@@ -46,29 +46,3 @@ def call_get_rates(request):
 
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=500) 
-
-def generate_date_range(start_date, end_date):
-    try:
-        # change as strings to obj date
-        fmt = "%Y-%m-%d"
-        start = datetime.strptime(start_date, fmt).date()
-        end    = datetime.strptime(end_date,    fmt).date()
-        if start > end:
-            return "The end_date cannot be earlier than the start_date"
-        if start > date.today():
-            return "The start_date cannot be after today"
-        if end - start > timedelta(days=5):
-            return "The period between start_date and end_date cannot exceed 5 days"
-        
-        date_list = []
-        current_date = start
-
-        while current_date <= end:
-            date_list.append(current_date.isoformat())  # 'YYYY-MM-DD'
-            current_date += timedelta(days=1)
-
-        return date_list
-            
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500) 
-    
