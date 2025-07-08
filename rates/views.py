@@ -1,4 +1,3 @@
-import json
 from django.shortcuts import render
 from django.http import JsonResponse
 from rates.service import fetch_and_save_rates
@@ -19,13 +18,9 @@ def call_get_rates(request):
 
         if not all([start_date, end_date, base_currency, target_currency]):
             return JsonResponse({'error': 'Required parameters missing'}, status=400)
-        if target_currency not in ['JPY', 'BRL', 'EUR'] or base_currency != 'USD':
-            return JsonResponse({'error': 'Incorrect Parameters'}, status=400)
+    
         list_dates = generate_date_range(start_date, end_date)
 
-        if not isinstance(list_dates, list):
-            return JsonResponse({'error': str(list_dates)}, status=400)
-        
         # chama o service
         data = fetch_and_save_rates(list_dates, base_currency, target_currency)  
         
@@ -42,7 +37,9 @@ def call_get_rates(request):
         }
 
         return render(request, 'rates/home.html', context)
-
-
+    
+    except ValueError as e:
+        return JsonResponse({'error': str(e)}, status=400)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500) 
+        return JsonResponse({'error': 'Internal server error'}, status=500)
+
