@@ -1,10 +1,11 @@
 from django.urls import path
 
-from rates.views import home,call_get_rates
+from rates import views
+
+app_name = 'rates'
 
 urlpatterns = [
-    path('', home),
-    path('home/', home),
-    path('home/api/', call_get_rates)
+    path('', views.home,name= "home"),
+    path('home/api/', views.call_get_rates, name= "rate_graph")
     
 ]
