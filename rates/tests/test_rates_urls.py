@@ -14,7 +14,7 @@ class RateURLsTest(TestCase):
 
     def test_rates_rate_graph_urls_is_correct(self):
         url= reverse('rates:rate_graph')
-        self.assertEqual(url,"/home/api/")
+        self.assertEqual(url,"/highcharts/")
 
     #Endpoints to API
     def test_rates_rate_periods_urls_is_correct(self):

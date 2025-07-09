@@ -6,7 +6,7 @@ app_name = 'rates'
 
 urlpatterns = [
     path('', views.home,name= "home"),
-    path('home/api/', views.call_get_rates, name= "rate_graph"),
+    path('highcharts/', views.call_get_rates, name= "rate_graph"),
 
     #New Endpoints
     path('api/rates/period/', views.get_rates_by_range_date, name= "rate_periods"),
