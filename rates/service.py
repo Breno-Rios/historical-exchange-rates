@@ -5,6 +5,7 @@ import logging
 import time
 from datetime import datetime
 from rates.models import Rate
+from rates.utils import generate_date_range,is_valid_date
 
 logger = logging.getLogger(__name__)
 
@@ -84,9 +85,62 @@ def insert_rate(obj):
             currency=currency,
             defaults={"value": value}
         )
+        
 def get_rates_by(date,currency):
     try:
         rates = Rate.objects.filter(date = date,currency=currency).order_by('-date')
         return rates
     except Rate.DoesNotExist:
         return None
+    
+def get_by_range(start_date, end_date):
+
+    list_dates= generate_date_range(start_date, end_date)
+
+    all_rates=[]
+    try:
+        for day in list_dates:
+            result = Rate.objects.filter(date = day).order_by('-date')
+            if result.exists():
+                all_rates.extend(result.values())
+            continue
+    except Exception as e:
+        raise Exception("error to process the request - {e}")
+    
+    return all_rates
+
+def get_by_target(target):
+    try:
+        result = Rate.objects.filter(currency = target).order_by('date')
+    except Exception as e:
+        raise Exception(f"error to process the request - {e}")
+        
+    if not result.exists():
+        raise ValueError(f"No exchange rates found for currency '{target}'")
+    
+    data = list(result.values())  
+    return data
+
+def get_by_day(date):
+    if not is_valid_date(date):
+        raise Exception("Invalid date format, expected YYYY-MM-DD")
+    
+    result = Rate.objects.filter(date = date).order_by('date')
+        
+    if not result.exists():
+        raise ValueError(f"No exchange rates found for currency '{date}'")
+    
+    data = list(result.values())  
+    return data
+
+def get_all():
+    try:
+        result = Rate.objects.all()
+    except Exception as e:
+        raise Exception(f"error to process the request - {e}")
+        
+    if not result.exists():
+        raise ValueError(f"No exchange rates")
+    
+    data = list(result.values())  
+    return data
