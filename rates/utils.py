@@ -24,5 +24,11 @@ def generate_date_range(start_date, end_date):
         current_date += timedelta(days=1)
 
     return date_list
+def is_valid_date(date_str):
+    try:
+        datetime.strptime(date_str, "%Y-%m-%d")
+        return True
+    except ValueError:
+        return False
             
     
