@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from rates.service import fetch_and_save_rates
+from rates import service
 from rates.utils import generate_date_range
 
 
@@ -22,7 +22,7 @@ def call_get_rates(request):
         list_dates = generate_date_range(start_date, end_date)
 
         # chama o service
-        data = fetch_and_save_rates(list_dates, base_currency, target_currency)  
+        data = service.fetch_and_save_rates(list_dates, base_currency, target_currency)  
         
         base = [ item['base']  for item in data ]
         dates = [ item['date']  for item in data ]
@@ -49,7 +49,8 @@ def get_rates_by_range_date(request):
     if not all([start_date, end_date]):
         return JsonResponse({'error': 'Required parameters missing'}, status=400)
     try:
-        return JsonResponse({"message": "range"}, status=200)
+        data= service.get_by_range(start_date,end_date)
+        return JsonResponse({'data':data}, status=200)
     except ValueError as e:
         return JsonResponse({'error': str(e)}, status=400)
     except Exception as e:
@@ -57,10 +58,11 @@ def get_rates_by_range_date(request):
     
 def get_rates_by_target(request):
     target = request.GET.get('target')
-    if not all([target]):
+    if not target:
         return JsonResponse({'error': 'Required parameters missing'}, status=400)
     try:
-        return JsonResponse({"message": "target"}, status=200)
+        data = service.get_by_target(target)
+        return JsonResponse({'data':data}, status=200)
     except ValueError as e:
         return JsonResponse({'error': str(e)}, status=400)
     except Exception as e:
@@ -68,10 +70,11 @@ def get_rates_by_target(request):
     
 def get_rates_by_day(request):
     start_date = request.GET.get('start_date')
-    if not all([start_date]):
+    if not start_date:
         return JsonResponse({'error': 'Required parameters missing'}, status=400)
     try:
-        return JsonResponse({"message": "day"}, status=200)
+        data = service.get_by_day(start_date)
+        return JsonResponse({'data':data}, status=200)
     except ValueError as e:
         return JsonResponse({'error': str(e)}, status=400)
     except Exception as e:
@@ -79,7 +82,8 @@ def get_rates_by_day(request):
     
 def get_all_rates(request):
     try:
-        return JsonResponse({"message": "all"}, status=200)
+        data = service.get_all()
+        return JsonResponse({'data':data}, status=200)
     except ValueError as e:
         return JsonResponse({'error': str(e)}, status=400)
     except Exception as e:
