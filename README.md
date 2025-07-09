@@ -3,6 +3,8 @@
 Aplicação **Python 3.13** + **Django 5.2.4** para consultar e exibir cotações históricas do **Dólar (USD)** em relação a **Real (BRL)**, **Euro (EUR)** e **Iene (JPY)**.  
 Os dados vêm da API pública [VAT Comply](https://www.vatcomply.com/documentation) e são persistidos em banco de dados.
 
+🔗 Acesse agora:(https://historical-exchange-rates.onrender.com)
+
 ---
 
 ## Funcionalidades
@@ -11,7 +13,6 @@ Os dados vêm da API pública [VAT Comply](https://www.vatcomply.com/documentati
 - Filtro por moedas: **BRL**, **EUR** e **JPY**
 - Armazenamento persistente das cotações
 - Visualização em gráficos via **Highcharts**
-- Sem necessidade de login ou autenticação
 - Testes automatizados com **pytest**
 
 ---
@@ -51,28 +52,20 @@ python manage.py runserver
 
 > A aplicação será servida em `http://localhost:8000/` por padrão.
 
----
 
-# 🌐 Acessando a aplicação
-
-| Recurso | URL (padrão) | O que faz? |
-|---------|--------------|------------|
-| **Página inicial (frontend)** | `http://127.0.0.1:8000/` | Carrega o formulário e o gráfico de cotações. |
-| **Endpoint JSON (backend)** | `http://127.0.0.1:8000/home/api/` | Retorna as cotações em JSON para o gráfico. |
-
-> Basta abrir o navegador em `http://127.0.0.1:8000/` (ou `http://localhost:8000/`) assim que o servidor estiver rodando. O frontend faz uma requisição AJAX para `/home/api/` para buscar os dados e montar o Highcharts automaticamente.
-
----
-
-## Documentação da API
+## 📄 Documentação da API
 
 ### 🔗 URL Base
 
-```text
-http://localhost:8000/api/
-```
+- **Ambiente de Produção:**  
+  `https://historical-exchange-rates.onrender.com/`
 
-### 📅 GET `/rates/period/`
+- **Ambiente Local:**  
+  `http://localhost:8000/`
+
+---
+
+### 📅 GET `api/rates/period/`
 
 Consulta todas as cotações registradas entre duas datas.
 
@@ -81,10 +74,11 @@ Consulta todas as cotações registradas entre duas datas.
 | `start_date`  | `YYYY-MM-DD`| ✔️ |
 | `end_date`    | `YYYY-MM-DD`| ✔️ |
 
-**Exemplo**
+**Exemplo:**
 
-```text
-/api/rates/period/?start_date=2025-07-01&end_date=2025-07-05
+```bash
+curl --request GET \
+  --url 'https://historical-exchange-rates.onrender.com/api/rates/period/?start_date=2025-07-01&end_date=2025-07-05'
 ```
 
 ```json
@@ -110,7 +104,7 @@ Consulta todas as cotações registradas entre duas datas.
 
 ---
 
-### 📅 GET `/rates/day/`
+### 📅 GET `api/rates/day/`
 
 Consulta todas as cotações registradas para uma data específica.
 
@@ -120,8 +114,9 @@ Consulta todas as cotações registradas para uma data específica.
 
 **Exemplo**
 
-```text
-/api/rates/day/?start_date=2025-07-01
+```bash
+curl --request GET \
+  --url 'https://historical-exchange-rates.onrender.com/api/rates/day/?start_date=2025-07-01'
 ```
 
 ```json
@@ -140,7 +135,7 @@ Consulta todas as cotações registradas para uma data específica.
 
 ---
 
-###	🪙 GET `/rate/`
+###	🪙 GET `api/rate/`
 
 Consulta o histórico de cotações de uma moeda específica.
 
@@ -150,8 +145,10 @@ Consulta o histórico de cotações de uma moeda específica.
 
 **Exemplo**
 
-```text
-/api/rate/?target=JPY
+
+```bash
+curl --request GET \
+  --url 'https://historical-exchange-rates.onrender.com/api/rate/?target=JPY'
 ```
 
 ```json
@@ -170,9 +167,14 @@ Consulta o histórico de cotações de uma moeda específica.
 
 ---
 
-### 🪙🪙GET `/rates/`
+### 🪙🪙GET `api/rates/`
 
 Retorna **todas** as cotações armazenadas.
+
+```bash
+curl --request GET \
+  --url 'https://historical-exchange-rates.onrender.com/api/rates/'
+```
 
 ```json
 {
