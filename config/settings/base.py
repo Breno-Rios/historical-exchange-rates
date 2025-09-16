@@ -9,65 +9,22 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-from decouple import config
-
+from dotenv import load_dotenv
+import os
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
+load_dotenv(BASE_DIR/'.env')
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY',default='_01wzpq023mj&l5)u&ttoymm3)a_g9%x1jw%z0!9oa&m1cdos!')
+SECRET_KEY = os.getenv('SECRET_KEY',default='_01wzpq023mj&l5)u&ttoymm3)a_g9%x1jw%z0!9oa&m1cdos!')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=True, cast=bool)
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,  # mantém loggers padrão do Django
-
-    'formatters': {
-        'verbose': {
-            'format': '[{asctime}] {levelname} {name} - {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname}: {message}',
-            'style': '{',
-        },
-    },
-
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-    },
-
-    'root': {
-        'handlers': ['console'],
-        'level': 'DEBUG',  # ou INFO
-    },
-
-    'loggers': {
-        'django': {
-            'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'rates': {  # << importante: esse deve ser o nome do seu app
-            'handlers': ['console'],
-            'level': 'DEBUG',
-            'propagate': False,
-        },
-    },
-}
-
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='*').split(',')
 
 
 # Application definition
@@ -93,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'historical_exchange_rates.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -110,23 +67,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'historical_exchange_rates.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DB_NAME'),
-        'USER': config('DB_USER'),
-        'PASSWORD': config('DB_PASSWORD'),
-        'HOST': config('DB_HOST'),
-        'PORT': config('DB_PORT'),
-    }
-}
-
+WSGI_APPLICATION = 'config.wsgi.application'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -163,7 +104,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
