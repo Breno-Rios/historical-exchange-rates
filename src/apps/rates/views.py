@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
-from rates import service
-from rates.utils import generate_date_range
+from apps.rates import service
+from apps.rates.utils import generate_date_range
 
 
 # Create your views here.

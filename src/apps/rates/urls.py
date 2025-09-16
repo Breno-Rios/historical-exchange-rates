@@ -1,6 +1,6 @@
 from django.urls import path
 
-from rates import views
+from apps.rates import views
 
 app_name = 'rates'
 

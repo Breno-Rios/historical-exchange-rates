@@ -4,8 +4,8 @@ import requests
 import logging
 import time
 from datetime import datetime
-from rates.models import Rate
-from rates.utils import generate_date_range,is_valid_date
+from apps.rates.models import Rate
+from apps.rates.utils import generate_date_range,is_valid_date
 
 logger = logging.getLogger(__name__)
 

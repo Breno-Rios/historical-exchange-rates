@@ -1,5 +1,5 @@
 from django.test import TestCase
-from rates import utils
+from src.apps.rates import utils
 
 class RatesUtilsTest(TestCase):
   def test_rates_generate_date_range_is_valid(self):

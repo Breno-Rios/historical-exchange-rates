@@ -1,5 +1,5 @@
 from django.test import TestCase
-from rates.models import Rate
+from src.apps.rates.models import Rate
 from datetime import date
 
 
