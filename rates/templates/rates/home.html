@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historical Exchange Rates</title>
+  <!-- Roboto -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{% static 'rates/css/style.css' %}">
+  
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/export-data.js"></script>
+  <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+</head>
+
+<body>
+  <header class="main-header-container">
+    <div class="main-header container">
+      <h1>Historical Exchange Rates</h1>
+    </div>
+  </header>
+  <div class="container">
+    <div class="content-panel">
+      <div class="card">
+          {% include "rates/forms.html" %}
+      </div>
+      <div class="results-list">
+        {% include "rates/graph.html" %}
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'rates/js/highcharts.js' %}"></script> 
+</body>
+</html>
