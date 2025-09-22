@@ -9,7 +9,7 @@ class Rate (models.Model):
     currency = models.CharField(
         max_length=3,
         choices=[(c, c) for c in ALLOWED_CURRENCIES],
-        unique=True,
+        unique=False,
         null=False,
         blank=False
     )
