@@ -20,4 +20,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.rates.urls')),
+    path('api/v1/exchange-rates/', include('apps.api.routers.api_get_routers.urls'))
 ]
