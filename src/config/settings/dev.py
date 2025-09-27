@@ -15,7 +15,25 @@ DATABASES = {
 
 # Logging detalhado
 LOGGING = {
-    "version": 1,
-    "handlers": {"console": {"class": "logging.StreamHandler"}},
-    "root": {"handlers": ["console"], "level": "DEBUG"},
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        # Apenas logs essenciais do Django
+        'django': {
+            'handlers': ['console'],
+            'level': 'WARNING',  # mostra WARNING, ERROR e CRITICAL
+            'propagate': True,
+        },
+        # Mostra requisições HTTP
+        'django.server': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
 }

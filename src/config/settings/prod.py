@@ -8,7 +8,7 @@ load_dotenv()
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', default=True, cast=bool)
+DEBUG = os.getenv('DEBUG', default=False)
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='*').split(',')
 

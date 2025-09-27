@@ -25,7 +25,7 @@ load_dotenv(BASE_DIR/'.env')
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY',default='_01wzpq023mj&l5)u&ttoymm3)a_g9%x1jw%z0!9oa&m1cdos!')
 
-
+ALLOWED_CURRENCIES = ["USD", "EUR", "BRL", "JPY"]
 
 # Application definition
 
