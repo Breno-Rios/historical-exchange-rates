@@ -1,5 +1,5 @@
 from django.test import TestCase
-from src.apps.rates import service
+from apps.rates import service
 
 
 # Create your tests here.

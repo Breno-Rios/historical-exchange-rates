@@ -3,7 +3,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from src.apps.rates import views
+from apps.rates import views
 
 # Create your tests here.
 
