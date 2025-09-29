@@ -8,16 +8,16 @@ class RateService:
     @staticmethod
     def get_all_currency_exchange_rates():
         try:
-            list_rates = list(Rate.objects.all())
-            return list_rates
+            rates_list = list(Rate.objects.all())
+            return rates_list
         except ObjectDoesNotExist as e:
             raise (f'error: {e}')
 
     @staticmethod
     def get_currency_exchange_rates_by_date(date: datetime):
         try:
-            list_rates = list(Rate.objects.filter(date=date))
-            return list_rates
+            rates_list = list(Rate.objects.filter(date=date))
+            return rates_list
         except ObjectDoesNotExist as e:
             raise ObjectDoesNotExist(
                 f'error: {e}, No rates found for date {date}')
@@ -25,9 +25,9 @@ class RateService:
     @staticmethod
     def get_currency_exchange_rates_by_currency(target_currency: str):
         try:
-            list_rates = list(Rate.objects.filter(
+            rates_list = list(Rate.objects.filter(
                 currency=target_currency))
-            return list_rates
+            return rates_list
         except ObjectDoesNotExist as e:
             raise ObjectDoesNotExist(
                 f'error: {e}, No rates found for currency {target_currency}')
@@ -35,8 +35,8 @@ class RateService:
     @staticmethod
     def get_currency_exchange_rates_by_data_range(start_date: datetime, end_date: datetime):
         try:
-            list_rates = list(Rate.objects.filter(
+            rates_list = list(Rate.objects.filter(
                 date__range=(start_date, end_date)))
-            return list_rates
+            return rates_list
         except ObjectDoesNotExist as e:
             raise ObjectDoesNotExist('error: {e}, No rates found in period')
