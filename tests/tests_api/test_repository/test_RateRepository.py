@@ -32,3 +32,8 @@ class RateRepositoryTest(TestCase):
         data4 = RateRepository.find_by_data_range(
             start_date='2025-08-31', end_date='2025-09-02')
         self.assertIsInstance(data4, QuerySet)
+
+    def test_find_by_data_range_and_filters_returns_queryset(self):
+        data5 = RateRepository.find_by_data_range_and_filters(start_date='2025-08-31', end_date='2025-09-02', currency='BRL')
+        self.assertIsInstance(data5, QuerySet)
+     
