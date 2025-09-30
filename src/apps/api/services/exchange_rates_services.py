@@ -1,6 +1,7 @@
 from apps.rates.models import Rate
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
+from apps.api.repository.rate_repository import RateRepository
 
 
 class RateService:
@@ -8,7 +9,7 @@ class RateService:
     @staticmethod
     def get_all_currency_exchange_rates():
         try:
-            rates_list = list(Rate.objects.all())
+            rates_list = list(RateRepository.find_all())
             return rates_list
         except ObjectDoesNotExist as e:
             raise (f'error: {e}')
@@ -16,7 +17,7 @@ class RateService:
     @staticmethod
     def get_currency_exchange_rates_by_date(date: datetime):
         try:
-            rates_list = list(Rate.objects.filter(date=date))
+            rates_list = list(RateRepository.find_by_date(date=date))
             return rates_list
         except ObjectDoesNotExist as e:
             raise ObjectDoesNotExist(
@@ -25,8 +26,7 @@ class RateService:
     @staticmethod
     def get_currency_exchange_rates_by_currency(target_currency: str):
         try:
-            rates_list = list(Rate.objects.filter(
-                currency=target_currency))
+            rates_list = list(RateRepository.find_by_currency(target_currency=target_currency))
             return rates_list
         except ObjectDoesNotExist as e:
             raise ObjectDoesNotExist(
@@ -35,8 +35,7 @@ class RateService:
     @staticmethod
     def get_currency_exchange_rates_by_data_range(start_date: datetime, end_date: datetime):
         try:
-            rates_list = list(Rate.objects.filter(
-                date__range=(start_date, end_date)))
+            rates_list = list(RateRepository.find_by_data_range(start_date, end_date))
             return rates_list
         except ObjectDoesNotExist as e:
             raise ObjectDoesNotExist('error: {e}, No rates found in period')
