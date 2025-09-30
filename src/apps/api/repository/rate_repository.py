@@ -1,6 +1,5 @@
 from apps.rates.models import Rate
 from datetime import datetime
-from django.core.exceptions import ObjectDoesNotExist
 
 class RateRepository:
 
