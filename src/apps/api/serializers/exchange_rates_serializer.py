@@ -1,5 +1,5 @@
 from apps.rates.models import Rate
-from apps.api.utils.exchange_date_formater import DateFormatter
+from apps.utils.exchange_date_formater import DateFormatter
 
 
 class ExchangeRatesSerializer():

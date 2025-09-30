@@ -1,6 +1,6 @@
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
-from .utils.exchange_date_formater import DateFormatter
+from apps.utils.exchange_date_formater import DateFormatter
 
 from .services.exchange_rates_services import RateService
 
