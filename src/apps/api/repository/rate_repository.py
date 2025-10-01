@@ -20,6 +20,13 @@ class RateRepository:
         return Rate.objects.filter( date__range=(start_date, end_date))
     
     @staticmethod
+    def find_by_data_range_and_filters( start_date: datetime, end_date: datetime,**filters):
+        return Rate.objects.filter(
+                    date__range=(start_date, end_date),
+                    **filters  
+                )
+    
+    @staticmethod
     def insert(date, base, currency, value):
         Rate.objects.create(
                 date=date,
