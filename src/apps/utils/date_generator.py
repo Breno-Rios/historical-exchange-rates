@@ -6,6 +6,9 @@ class DateGenerator():
     @staticmethod
     def range_dates(start: datetime , end: datetime):
 
+        if start > end:
+            raise ValueError("Error: end date must be after start date")
+
         if not isinstance(start, datetime) and isinstance(end, datetime):
             raise ValueError('error: the types of dates must be a datetime')
 
