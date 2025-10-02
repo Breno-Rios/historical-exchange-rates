@@ -8,7 +8,7 @@ from apps.api.external_api import api_vatcomply_com_rates
 class RateService:
 
     @staticmethod
-    def insert_external_obj_exchange_rates(dates: list, base_currency:str, target_currency: str):
+    def __insert_external_obj_exchange_rates(dates: list, base_currency:str, target_currency: str):
 
         for date in dates:
 
@@ -20,10 +20,11 @@ class RateService:
             response = api_vatcomply_com_rates.get_vatcomply_exchange_rates(params=params)
             data = response.json()
 
+            currency = list(data.get('rates'))[0]
             RateRepository.insert(date= data.get('date'),
                                   base=data.get('base'),
-                                  currency=list(data.get('rates'))[0],
-                                  value=data.get('rates').get('BRL')
+                                  currency=currency,
+                                  value=data.get('rates').get(currency)
                                   )
 
     @staticmethod
@@ -44,7 +45,7 @@ class RateService:
             if not missing_dates:
                 return list(rates_queryset)
             
-            RateService.insert_external_obj_exchange_rates(missing_dates, base_currency, target_currency)
+            RateService.__insert_external_obj_exchange_rates(missing_dates, base_currency, target_currency)
 
             return list(
                         RateRepository.find_by_data_range_and_filters(
