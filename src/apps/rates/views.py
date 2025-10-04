@@ -1,90 +1,78 @@
 from django.shortcuts import render
+from .forms import RateForms
 from django.http import JsonResponse
-from apps.rates import service
-from apps.rates.utils import generate_date_range
+from django.core.exceptions import ObjectDoesNotExist
+from apps.utils.exchange_date_formater import DateFormatter
+
+from apps.api.services.exchange_rates_services import RateService
+
+from apps.api.validators.currency_code_validator import CurrencyValidator
+
+from apps.api.serializers.exchange_rates_serializer import ExchangeRatesSerializer
+
+from requests.exceptions import Timeout, ConnectionError, HTTPError
 
 
 # Create your views here.
 def home(request):
-  return render(request,'rates/home.html')
-
-
-def call_get_rates(request):
-    try:
-        start_date = request.GET.get('start-date')
-        end_date = request.GET.get('end-date')
-        base_currency = request.GET.get('base-currency')
-        target_currency = request.GET.get('target-currency')
-
-        if not all([start_date, end_date, base_currency, target_currency]):
-            return JsonResponse({'error': 'Required parameters missing'}, status=400)
-    
-        list_dates = generate_date_range(start_date, end_date)
-
-        # chama o service
-        data = service.fetch_and_save_rates(list_dates, base_currency, target_currency)  
         
-        base = [ item['base']  for item in data ]
-        dates = [ item['date']  for item in data ]
-        currency= [ item['currency'] for item in data ]
-        values= [ item['value'] for item in data ]
+    form = RateForms()
+  
+    return render(request,'rates/index.html', {'form': form})
 
-        context = {
-            'base': base,
-            'currency': currency,
-            'categories':dates,
-            'values': values,
-        }
+def dashboard(request):
+    if request.method == 'GET':
+        try:
+            start_date = request.GET.get('start-date')
+            end_date = request.GET.get('end-date')
+            currency_code = request.GET.get('currency-code')
 
-        return render(request, 'rates/home.html', context)
-    
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
-    except Exception as e:
-        return JsonResponse({'error': 'Internal server error'}, status=500)
+            if not start_date or not end_date:
+                raise ValueError('missing start_date or end_date')
+            if not currency_code:
+                raise ValueError('missing currency_code param')
 
-def get_rates_by_range_date(request):
-    start_date = request.GET.get('start_date')
-    end_date = request.GET.get('end_date')
-    if not all([start_date, end_date]):
-        return JsonResponse({'error': 'Required parameters missing'}, status=400)
-    try:
-        data= service.get_by_range(start_date,end_date)
-        return JsonResponse({'data':data}, status=200)
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
-    except Exception as e:
-        return JsonResponse({'error': 'Internal server error'}, status=500)
-    
-def get_rates_by_target(request):
-    target = request.GET.get('target')
-    if not target:
-        return JsonResponse({'error': 'Required parameters missing'}, status=400)
-    try:
-        data = service.get_by_target(target)
-        return JsonResponse({'data':data}, status=200)
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
-    except Exception as e:
-        return JsonResponse({'error': 'Internal server error'}, status=500)
-    
-def get_rates_by_day(request):
-    start_date = request.GET.get('start_date')
-    if not start_date:
-        return JsonResponse({'error': 'Required parameters missing'}, status=400)
-    try:
-        data = service.get_by_day(start_date)
-        return JsonResponse({'data':data}, status=200)
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
-    except Exception as e:
-        return JsonResponse({'error': 'Internal server error'}, status=500)
-    
-def get_all_rates(request):
-    try:
-        data = service.get_all()
-        return JsonResponse({'data':data}, status=200)
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
-    except Exception as e:
-        return JsonResponse({'error': 'Internal server error'}, status=500)
+            start_date = DateFormatter.fromisoformat(request.GET.get('start-date'))
+            end_date = DateFormatter.fromisoformat(request.GET.get('end-date'))
+            currency_code = CurrencyValidator.validate(request.GET.get('currency-code'))
+
+            data = RateService.get_dashboard_currency_exchange_rates(
+                start_date=start_date,
+                end_date=end_date,
+                base_currency=None,
+                target_currency = currency_code
+                )
+            
+            content = ExchangeRatesSerializer.list_to_dict(data)
+
+            return JsonResponse({"data": content}, status=200)
+
+        except Timeout as e:
+            return JsonResponse(
+                {"error": "Timeout contacting external API", "details": str(e)},
+                status=504
+            )
+
+        except ConnectionError as e:
+            return JsonResponse(
+                {"error": "Could not connect to external API", "details": str(e)},
+                status=503
+            )
+
+        except HTTPError as e:
+            return JsonResponse(
+                {"error": "HTTP error from external API", "details": str(e)},
+                status=502
+            )
+
+        except ObjectDoesNotExist as e:
+            return JsonResponse({"error": str(e)}, status=404)
+
+        except ValueError as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+        except RuntimeError as e:  # falha do retry do service
+            return JsonResponse({"error": str(e)}, status=500)
+
+        except Exception as e:
+            return JsonResponse({"error": f"Unexpected error {str(e)}"}, status=500)
