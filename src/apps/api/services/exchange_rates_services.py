@@ -2,6 +2,7 @@ from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
 from apps.api.repository.rate_repository import RateRepository
 from apps.utils.date_generator import DateGenerator
+from apps.utils.workday import filter_only_five_workdays
 from apps.api.external_api import api_vatcomply_com_rates
 
 
@@ -30,7 +31,11 @@ class RateService:
     @staticmethod
     def get_dashboard_currency_exchange_rates(start_date: datetime, end_date: datetime, base_currency:str, target_currency: str):
         try:
-            all_dates = DateGenerator.range_dates(start_date, end_date)
+
+            if base_currency == None:
+                base_currency = 'USD'
+
+            all_dates = filter_only_five_workdays(DateGenerator.range_dates(start_date, end_date))
 
             rates_queryset = RateRepository.find_by_data_range_and_filters(
                 start_date,
