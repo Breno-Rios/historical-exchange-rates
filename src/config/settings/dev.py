@@ -17,22 +17,37 @@ DATABASES = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] {levelname} {name} - {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} - {message}',
+            'style': '{',
+        },
+    },
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
+            'formatter': 'verbose',  # usa o formato detalhado
         },
     },
     'loggers': {
-        # Apenas logs essenciais do Django
         'django': {
             'handlers': ['console'],
-            'level': 'WARNING',  # mostra WARNING, ERROR e CRITICAL
+            'level': 'INFO',  # DEBUG para ainda mais detalhamento se quiser
             'propagate': True,
         },
-        # Mostra requisições HTTP
         'django.server': {
             'handlers': ['console'],
-            'level': 'INFO',
+            'level': 'DEBUG',  # mostra detalhes das requisições HTTP
+            'propagate': False,
+        },
+        # logger customizado para a sua app
+        'myapp': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
             'propagate': False,
         },
     },
