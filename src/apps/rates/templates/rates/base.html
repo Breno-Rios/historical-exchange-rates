@@ -1,0 +1,29 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exchange Rates</title>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <!-- <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script> -->
+    
+    <link rel="stylesheet" href="{% static 'rates/css/style.css' %}">
+
+    
+</head>
+<body>
+    {% block content %}
+    {% endblock content %}
+    {% include "rates/partials/footer.html" %}
+
+
+    {% block scripts %}
+    {% endblock scripts %}
+</body>
+    
+</html>
