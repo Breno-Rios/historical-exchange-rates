@@ -24,7 +24,7 @@ class RateRepository:
         return Rate.objects.filter(
                     date__range=(start_date, end_date),
                     **filters  
-                )
+                ).order_by('date')
     
     @staticmethod
     def insert(date, base, currency, value):
