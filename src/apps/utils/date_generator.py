@@ -1,11 +1,14 @@
 
-from datetime import datetime,timedelta
+from datetime import datetime,timedelta, date
 
 class DateGenerator():
     
     @staticmethod
     def range_dates(start: datetime , end: datetime):
 
+        if start > date.today() or end > date.today():
+            raise ValueError("Error: the period must not be after today")
+        
         if start > end:
             raise ValueError("Error: end date must be after start date")
 
