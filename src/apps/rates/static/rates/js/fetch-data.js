@@ -17,15 +17,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const jsonData = await response.json()
 
             if(response.ok){
-                console.log(jsonData)
+                hideMessage()
                 updateChart(jsonData.data)
             }else{
-                alert(jsonData.error)
-                console.log(jsonData.error)
+                showMessage(jsonData.error, 'danger')
             }
             
         }catch (e){
             console.log('Error to request:', e)
+            showMessage(`Error to request {response.status}`, 'danger')
         }
 
     })
