@@ -33,30 +33,3 @@ window.chart = Highcharts.chart('container', {
     tooltip: { headerFormat: '<b>{series.name}</b><br />', pointFormat: '{point.y}' },
     series: [{ name: 'Rates', data: [], color: '#193b4f' }]
 });
-
-    
-    
-    // function updateChart(data) {
-    //     if (!data || !data.length) {
-    //         console.warn("No data received to update chart");
-    //         chart.series[0].setData([]);
-    //         chart.xAxis[0].setCategories([]);
-    //         return;
-    //     }
-        
-    //     const categories = data.map(d => d.date);
-    //     const values = data.map(d => parseFloat(d.value) || 0);
-    //     const currencyStr = '0'
-
-        
-    //     chart.xAxis[0].setCategories(categories);
-    //     chart.series[0].setData(values);
-    //     chart.pointFormat[0].setData(values);
-    //     chart.update({
-    //     tooltip: {
-    //         pointFormat: `{point.y} ${currencyStr}`
-    //     }
-    // });
-    // }
-    
-

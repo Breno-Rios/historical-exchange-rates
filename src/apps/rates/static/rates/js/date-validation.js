@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function validateDates() {
     const today = new Date().toISOString().split('T')[0];
 
-    let message = ""; // reseta sempre
+    let message = ""; 
 
     if (startDate.value > today || endDate.value > today) {
       message = "The period must not be after today!";
@@ -15,11 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
       message = "End date must be after start date!";
     }
 
-    if (message) {
-      showMessage(message, "warning");
-    } else {
-      hideMessage();
-    }
+    if (message) 
+      return showMessage(message, "warning");
+   
+    hideMessage();
+    
   };
 
 startDate.addEventListener('change', validateDates);
