@@ -2,9 +2,9 @@ from datetime import datetime, date
 
 def filter_only_five_workdays(date_list: date) -> list:
     
-    if len(date_list) > 5:
+    if len(date_list) > 7:
         raise ValueError("Error: the period must not exceed 5 workdays")
-
+    print('entrada',date_list)
     try:
         workdays = []
         for d in date_list:
@@ -17,7 +17,8 @@ def filter_only_five_workdays(date_list: date) -> list:
     if not workdays:
         raise ValueError("Error: the period must include only workdays")
     
-    
+    print('saida',workdays)
+
     return workdays
 
 
