@@ -28,7 +28,7 @@ class RateRepository:
     
     @staticmethod
     def insert(date, base, currency, value):
-        Rate.objects.create(
+        Rate.objects.update_or_create(
                 date=date,
                 base=base,
                 currency=currency,
