@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from .forms import RateForms
 from django.http import JsonResponse
 from django.core.exceptions import ObjectDoesNotExist
@@ -12,50 +11,62 @@ from apps.api.serializers.exchange_rates_serializer import ExchangeRatesSerializ
 
 from requests.exceptions import Timeout, ConnectionError, HTTPError
 
+from django.views.generic import TemplateView , View
 
-# Create your views here.
-def home(request):
+
+class HomeView(TemplateView):
+    template_name = "rates/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = RateForms()
+        return context
+
+class DashboardView(View):
+    service = RateService()
+    serializer = ExchangeRatesSerializer()
+
+    def validate_params(self):
+            
+        start_date = self.request.GET.get('start-date')
+        end_date = self.request.GET.get('end-date')
+        currency_code = self.request.GET.get('currency-code')
+
+        if not start_date or not end_date:
+            raise ValueError('missing start_date or end_date')
+        if not currency_code:
+            raise ValueError('missing currency_code param')
         
-    form = RateForms()
-  
-    return render(request,'rates/index.html', {'form': form})
+        start_date = DateFormatter.fromisoformat(start_date)
+        end_date = DateFormatter.fromisoformat(end_date)
+        currency_code = CurrencyValidator.validate(currency_code)
 
-def dashboard(request):
-    if request.method == 'GET':
+        return start_date, end_date, currency_code
+    
+    def get(self, request, *args, **kwargs):
         try:
-            start_date = request.GET.get('start-date')
-            end_date = request.GET.get('end-date')
-            currency_code = request.GET.get('currency-code')
-
-            if not start_date or not end_date:
-                raise ValueError('missing start_date or end_date')
-            if not currency_code:
-                raise ValueError('missing currency_code param')
-
-            start_date = DateFormatter.fromisoformat(request.GET.get('start-date'))
-            end_date = DateFormatter.fromisoformat(request.GET.get('end-date'))
-            currency_code = CurrencyValidator.validate(request.GET.get('currency-code'))
-
-            data = RateService.get_dashboard_currency_exchange_rates(
+            start_date, end_date, currency_code = self.validate_params()
+              
+            queryset = self.service.get_dashboard_currency_exchange_rates(
                 start_date=start_date,
                 end_date=end_date,
-                base_currency=None,
-                target_currency = currency_code
-                )
-            
-            content = ExchangeRatesSerializer.list_to_dict(data)
-
+                base_currency='USD',
+                target_currency=currency_code
+            )
+            content = self.serializer.list_to_dict(queryset)
             return JsonResponse({"data": content}, status=200)
 
         except Timeout as e:
             return JsonResponse(
-                {"error": "Timeout contacting external API", "details": str(e)},
+                {"error": "Timeout contacting external API",
+                    "details": str(e)},
                 status=504
             )
 
         except ConnectionError as e:
             return JsonResponse(
-                {"error": "Could not connect to external API", "details": str(e)},
+                {"error": "Could not connect to external API",
+                    "details": str(e)},
                 status=503
             )
 
