@@ -3,31 +3,25 @@ from datetime import datetime
 
 class RateRepository:
 
-    @staticmethod
-    def find_all():
+    def find_all(self, ):
         return Rate.objects.all()
 
-    @staticmethod
-    def find_by_date(date: datetime):
+    def find_by_date(self, date: datetime):
         return Rate.objects.filter(date=date)
 
-    @staticmethod
-    def find_by_currency(target_currency: str):
+    def find_by_currency(self, target_currency: str):
         return Rate.objects.filter(currency= target_currency)
 
-    @staticmethod
-    def find_by_data_range(start_date: datetime, end_date: datetime):
+    def find_by_data_range(self, start_date: datetime, end_date: datetime):
         return Rate.objects.filter( date__range=(start_date, end_date))
     
-    @staticmethod
-    def find_by_data_range_and_filters( start_date: datetime, end_date: datetime,**filters):
+    def find_by_data_range_and_filters(self, start_date: datetime, end_date: datetime,**filters):
         return Rate.objects.filter(
                     date__range=(start_date, end_date),
                     **filters  
                 ).order_by('date')
     
-    @staticmethod
-    def insert(date, base, currency, value):
+    def insert(self, date, base, currency, value):
         Rate.objects.update_or_create(
                 date=date,
                 base=base,
