@@ -10,22 +10,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const endDate = form.querySelector('[name="end_date"]').value;
         const currencyCode = form.querySelector('[name="currency"]').value;
         
-        const url = `/dashboard/?start-date=${startDate}&end-date=${endDate}&currency-code=${currencyCode}`;
+        await new Promise(resolve => setTimeout(resolve, 10))
+        
+        const url = `/dashboard/${startDate}/${endDate}/?currency=${currencyCode}`;
         
         try{
+            showLoading();
             const response = await fetch(url);
             const jsonData = await response.json()
-
             if(response.ok){
                 hideMessage()
-                updateChart(jsonData.data)
+                updateChart(jsonData)
             }else{
                 showMessage(jsonData.error, 'danger')
             }
-            
+            hideLoading();
         }catch (e){
             console.log('Error to request:', e)
             showMessage(`Error to request {response.status}`, 'danger')
+            hideLoading()
+        }finally{
+             hideLoading();
+
         }
 
     })
@@ -39,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const categories = data.map(d => d.date);
         const values = data.map(d => parseFloat(d.value) || 0);
-        const currencyStr = data.map(d => d.base_code)
+        const currencyStr = data.map(d => d.currency)
         
         window.chart.xAxis[0].setCategories(categories);
         window.chart.series[0].setData(values);

@@ -138,3 +138,27 @@
     border: 1px solid transparent;
     border-radius: .25rem;
 }
+
+button:disabled {
+      cursor: not-allowed;
+      opacity: 0.9;
+    }
+
+.loader {
+  width: fit-content;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #0000;
+  -webkit-text-stroke: 1px #007891;
+  --g:conic-gradient(#007891 0 0) no-repeat text;
+  background: var(--g) 0,var(--g) 100%,var(--g) 0 0,var(--g) 0 100%;
+  animation: l5 2s linear infinite;
+}
+.loader:before {
+  content: "Loading...";
+}
+@keyframes l5 {
+  0%,100%{background-size: 0   100%,0   100%,100% 0  ,100% 0  }
+  50%    {background-size: 55% 100%,55% 100%,100% 0  ,100% 0  }
+  50.01% {background-size: 0   100%,0   100%,100% 55%,100% 55%}
+}
