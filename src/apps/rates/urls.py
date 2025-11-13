@@ -7,5 +7,5 @@ app_name = 'rates'
 urlpatterns = [
     #path('', views.HomeView.as_view(),name= "home"),
     path('', views.HomeView.as_view(),name= "home"),
-    path('dashboard/', views.DashboardView.as_view(), name= "dashboard"),
+    path('dashboard/<str:start_date>/<str:end_date>/', views.DashboardFilterPeriod.as_view(), name= "dashboard"),
 ]
