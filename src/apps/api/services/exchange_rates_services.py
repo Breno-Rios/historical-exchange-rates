@@ -1,22 +1,65 @@
 from datetime import datetime
 from django.core.exceptions import ObjectDoesNotExist
-from apps.api.repository.rate_repository import RateRepository
-from apps.utils.date_generator import DateGenerator
-from apps.utils.workday import filter_only_five_workdays
+from apps.api.repositories.rate_repository import RateRepository
+from apps.utils.workday import Workdays
 from apps.api.clients.api_vatcomply import ClientVatcomply
 from apps.rates.models import Rate
 from datetime import date
 from decimal import Decimal
 
-class RateService:
+
+class RateAPIService:
     def __init__(self, repository: RateRepository):
         self.repository: RateRepository = repository
 
-    def __insert_external_obj_exchange_rates(self, dates: list, base_currency:str, target_currency: str):
-        
-        client =  ClientVatcomply.fetch_by_dates(base_currency,target_currency,dates)
+    def find_all(self):
+        try:
+            queryset = self.repository.find_all()
+            return queryset
+        except ObjectDoesNotExist as e:
+            raise ValueError(f'error: {e}')
 
-        for data in client:
+    def find_by(self, **filters):
+        try:
+            queryset = self.repository.find_by(**filters)
+            return queryset
+        except ObjectDoesNotExist as e:
+            raise ValueError(f'error: {e}')
+
+    def find_by_data_range_and_filters(self, **filters):
+        try:
+            start = filters.pop('start_date')
+            end = filters.pop('end_date')
+
+            validator = Workdays(
+                start, end).filtered_period_is_valid(max_days=5)
+
+            if not validator:
+                raise ValueError(
+                    "Error: the period must not exceed 5 workdays")
+
+            queryset = self.repository.find_by_data_range_and_filters(
+                start_date=start, end_date=end, **filters)
+            return queryset
+        except ObjectDoesNotExist as e:
+            raise ValueError(f'error: {e}')
+
+
+class RateDashboardService:
+
+    def __init__(self, repository: RateRepository, rate_api: RateAPIService):
+        self.repository: RateRepository = repository
+        self.rate_api: RateAPIService = rate_api
+
+    def _get_missing_dates(self, workdays_period, **filters):
+
+        rates_queryset = self.rate_api.find_by_data_range_and_filters(**filters)
+        existing_dates = rates_queryset.values_list("date", flat=True)
+        missing_dates = [d for d in workdays_period if d not in existing_dates]
+        return missing_dates
+
+    def _save_new_rates(self, client_data):
+        for data in client_data:
             self.repository.insert(
                 date=data['date'],
                 base=data['base'],
@@ -24,50 +67,29 @@ class RateService:
                 value=list(data['rates'].values())[0]
             )
 
-    def get_dashboard_currency_exchange_rates(self, start_date: datetime, end_date: datetime, base_currency:str, target_currency: str):
+    def get_dashboard_currency_exchange_rates(self, start_date: datetime, end_date: datetime, base: str, currency: str):
+
         try:
-            
-            all_dates = filter_only_five_workdays(DateGenerator.range_dates(start_date, end_date))
+            workdays = Workdays(start_date, end_date)
 
-            filters = dict(start_date = start_date, end_date= end_date, base = base_currency, currency = target_currency)
+            if not workdays.filtered_period_is_valid(max_days=5):
+                raise ValueError("Error: the period must not exceed 5 workdays")
 
-            rates_queryset = self.find_by_data_range_and_filters(**filters)
+            workdays_period = workdays.generate_workdays()
 
-            existing_dates = rates_queryset.values_list("date", flat=True)
-            missing_dates = [d for d in all_dates if d not in existing_dates]
+            filters = dict(start_date=start_date, end_date=end_date,
+                            base=base, currency=currency)
 
-            if not missing_dates:
-                return rates_queryset
-            
-            self.__insert_external_obj_exchange_rates(missing_dates, base_currency, target_currency)
-            
-            return self.find_by_data_range_and_filters(**filters)
-                           
-    
+            missing_dates = self._get_missing_dates(workdays_period, **filters)
+
+            if missing_dates:
+                client = ClientVatcomply.fetch_by_dates(
+                    base, currency, missing_dates)
+
+                self._save_new_rates(client)
+
+            return self.rate_api.find_by_data_range_and_filters(**filters)
+
         except ObjectDoesNotExist as e:
-            raise (f'error: {e}')
+            raise ValueError(f'error: {e}')
 
-
-    def find_all(self):
-        try:
-            queryset = self.repository.find_all()
-            return queryset
-        except queryset.ObjectDoesNotExist as e:
-            raise (f'error: {e}')
-        
-    def find_by(self, **filters):
-       try:
-           queryset = self.repository.find_by(**filters) 
-           return queryset
-       except queryset.ObjectDoesNotExist as e:
-            raise (f'error: {e}')
-        
-    def find_by_data_range_and_filters(self, **filters):
-        try:
-           start = filters.pop('start_date')
-           end = filters.pop('end_date')
-           queryset = self.repository.find_by_data_range_and_filters(start_date=start, end_date=end, **filters) 
-           return queryset
-        except queryset.ObjectDoesNotExist as e:
-            raise (f'error: {e}')
-        
