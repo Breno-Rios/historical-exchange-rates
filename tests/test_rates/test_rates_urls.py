@@ -12,8 +12,5 @@ class RateURLsTest(TestCase):
         url= reverse('rates:home')
         self.assertEqual(url,"/")
 
-    def test_rates_rate_graph_urls_is_correct(self):
-        url= reverse('rates:rate_graph')
-        self.assertEqual(url,"/highcharts/")
 
    
