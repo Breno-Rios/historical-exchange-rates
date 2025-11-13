@@ -6,8 +6,7 @@ app_name = "api"
 
 urlpatterns = [
     path("rates/", api_views.RateAPIList.as_view()),
-    path("rate/", api_views.RateAPIFilter.as_view()),
-    path("rate/period/", api_views.RateAPIFilterPeriod.as_view()),
+    path("rates/<str:start_date>/<str:end_date>/", api_views.RateAPIFilterPeriod.as_view()),
 
 ]
 
