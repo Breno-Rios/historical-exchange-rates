@@ -13,7 +13,7 @@ class Rate (models.Model):
         null=False,
         blank=False
     )
-    value = models.DecimalField(null=True,blank=False,decimal_places= 4, max_digits=10)  
+    value = models.DecimalField(null=True,blank=False,decimal_places= 2, max_digits=10)  
 
     def __str__(self):
         return f'{self.date} | {self.base} → {self.currency} = {self.value}'
